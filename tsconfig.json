@@ -1,0 +1,49 @@
+{
+  "compilerOptions": {
+    // Target modern JavaScript for better performance
+    "target": "es2017",
+    "lib": ["dom", "dom.iterable", "es6"],
+
+    // Allow JavaScript files during migration
+    "allowJs": true,
+    "skipLibCheck": true,
+
+    // Enable strict type checking for better code quality
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+
+    // Modern module system
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+
+    // React JSX support
+    "jsx": "preserve",
+
+    // Performance optimizations
+    "incremental": true,
+
+    // Next.js plugin for enhanced TypeScript support
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+
+    // Path mapping for cleaner imports
+    "paths": {
+      "@/*": ["./*"],
+      "@/components/*": ["./components/*"],
+      "@/lib/*": ["./lib/*"],
+      "@/app/*": ["./app/*"],
+      "@/smart-contract/*": ["./lib/smart-contract/*"],
+      "@/config/*": ["./lib/config/*"],
+      "@/contracts/*": ["./contracts/*"],
+      "@/public/*": ["./public/*"]
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/SuiProvider..tsx", "app/SuiProvider.tsx"],
+  "exclude": ["node_modules"]
+}

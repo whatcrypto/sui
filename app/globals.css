@@ -1,26 +1,244 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Sui-inspired color palette */
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+
+    /* Primary colors with Sui blue gradient */
+    --primary: 211 100% 50%;
+    --primary-foreground: 0 0% 98%;
+
+    /* Accent colors */
+    --accent: 217 91% 60%;
+    --accent-foreground: 0 0% 98%;
+
+    /* Neutral colors */
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+
+    /* Card with subtle background */
+    --card: 0 0% 8%;
+    --card-foreground: 0 0% 98%;
+
+    /* Borders with subtle glow */
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+
+    /* Status colors */
+    --destructive: 0 62.8% 50%;
+    --destructive-foreground: 0 0% 98%;
+
+    /* Gradient definitions */
+    --gradient-primary: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
+    --gradient-accent: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+    --gradient-success: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+    --gradient-border: linear-gradient(
+      135deg,
+      rgba(14, 165, 233, 0.5) 0%,
+      rgba(99, 102, 241, 0.5) 100%
+    );
+
+    --radius: 0.75rem;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-muted;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/20 rounded-full;
+    transition: background-color 0.2s;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/40;
+  }
+}
+
+@layer components {
+  /* Sui-style gradient text */
+  .gradient-text {
+    @apply bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent;
+  }
+
+  /* Glass morphism card */
+  .glass-card {
+    @apply bg-card/40 backdrop-blur-xl border border-white/10 rounded-xl;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  }
+
+  /* Gradient border card */
+  .gradient-border-card {
+    @apply relative rounded-xl bg-card overflow-hidden;
+  }
+
+  .gradient-border-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: var(--gradient-border);
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+
+  /* Sui-style button */
+  .sui-button {
+    @apply relative px-6 py-3 rounded-lg font-medium transition-all duration-200;
+    @apply hover:translate-y-[-2px] hover:shadow-lg;
+  }
+
+  .sui-button-primary {
+    @apply bg-gradient-to-r from-blue-500 to-violet-500 text-white;
+    @apply hover:from-blue-600 hover:to-violet-600;
+    box-shadow: 0 4px 20px 0 rgba(99, 102, 241, 0.3);
+  }
+
+  .sui-button-secondary {
+    @apply bg-card border border-white/10 text-foreground;
+    @apply hover:bg-card/80 hover:border-white/20;
+  }
+
+  /* Glow effect */
+  .glow {
+    filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.3));
+  }
+
+  /* Metric card */
+  .metric-card {
+    @apply glass-card p-6 space-y-2;
+  }
+
+  .metric-value {
+    @apply text-3xl font-bold gradient-text;
+  }
+
+  .metric-label {
+    @apply text-sm text-muted-foreground;
+  }
+
+  /* Hero section */
+  .hero-gradient {
+    background: radial-gradient(
+      ellipse at top,
+      rgba(99, 102, 241, 0.1),
+      transparent 50%
+    );
+  }
+
+  /* Feature card hover effect */
+  .feature-card {
+    @apply glass-card p-8 transition-all duration-300;
+    @apply hover:bg-card/60 hover:border-white/20 hover:translate-y-[-4px];
+    @apply hover:shadow-[0_20px_40px_rgba(99,102,241,0.1)];
+  }
+
+  /* Section divider */
+  .section-divider {
+    @apply h-px bg-gradient-to-r from-transparent via-white/10 to-transparent;
+  }
+
+  /* Animated gradient background */
+  .animated-gradient-bg {
+    background: linear-gradient(-45deg, #0f172a, #1e293b, #0ea5e9, #6366f1);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
+  }
+
+  @keyframes gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  /* Grid pattern background */
+  .grid-pattern {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+
+  /* Fade in animation */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+
+  /* Pulse animation for important elements */
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  .pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
+
+@layer utilities {
+  /* Text shadow for better readability */
+  .text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Blur backdrop */
+  .backdrop-blur-xl {
+    backdrop-filter: blur(20px);
+  }
+
+  /* Custom focus styles */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:ring-offset-2 focus:ring-offset-background;
+  }
 }
