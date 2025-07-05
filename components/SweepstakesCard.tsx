@@ -1,6 +1,17 @@
 "use client";
 import { useState } from "react";
-import { formatSweepAmount, formatTimestamp, getSweepstakesStatus } from "../lib/smart-contract/index.js";
+import { formatSweepAmount, formatTimestamp, getSweepstakesStatus, Sweepstakes } from "../lib/smart-contract";
+
+interface SweepstakesCardProps {
+  sweepstake: Sweepstakes;
+  onEnter?: (sweepstakesId: string) => void;
+  onSelectWinner?: (sweepstakesId: string) => void;
+  onSubmitProof?: (sweepstakesId: string, proofData: string) => void;
+  showEnterButton?: boolean;
+  showHostActions?: boolean;
+  showEntryInfo?: boolean;
+  userAddress?: string;
+}
 
 export function SweepstakesCard({
   sweepstake,
@@ -11,18 +22,20 @@ export function SweepstakesCard({
   showHostActions = false,
   showEntryInfo = false,
   userAddress,
-}) {
-  const [submittingProof, setSubmittingProof] = useState(false);
-  const [proofData, setProofData] = useState("");
+}: SweepstakesCardProps) {
+  const [submittingProof, setSubmittingProof] = useState<boolean>(false);
+  const [proofData, setProofData] = useState<string>("");
 
-  const handleSubmitProof = async () => {
+  const handleSubmitProof = async (): Promise<void> => {
     if (!proofData.trim()) {
       alert("Please enter proof of delivery");
       return;
     }
     setSubmittingProof(true);
     try {
-      await onSubmitProof(sweepstake.id, proofData);
+      if (onSubmitProof) {
+        await onSubmitProof(sweepstake.id, proofData);
+      }
       setProofData("");
     } finally {
       setSubmittingProof(false);
@@ -126,7 +139,7 @@ export function SweepstakesCard({
       <div className="flex items-center space-x-2">
         {showEnterButton && status === "ACTIVE" && !isEnded && (
           <button
-            onClick={() => onEnter(sweepstake.id)}
+            onClick={() => onEnter && onEnter(sweepstake.id)}
             disabled={sweepstake.participantCount >= sweepstake.maxParticipants}
             className="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 disabled:opacity-50 text-white rounded-md text-sm transition-all duration-200 font-medium"
           >
@@ -138,7 +151,7 @@ export function SweepstakesCard({
 
         {canSelectWinner && (
           <button
-            onClick={() => onSelectWinner(sweepstake.id)}
+            onClick={() => onSelectWinner && onSelectWinner(sweepstake.id)}
             className="px-4 py-2 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-500 hover:to-orange-500 text-white rounded-md text-sm transition-all duration-200 font-medium"
           >
             Select Winner

@@ -6,11 +6,18 @@ import {
   getActiveSweepstakes, 
   getHostSweepstakes, 
   getParticipantEntries 
-} from "../lib/smart-contract/index.js";
+} from "../lib/smart-contract";
+
+interface DashboardStats {
+  activeSweepstakes: number;
+  hostedSweepstakes: number;
+  enteredSweepstakes: number;
+  loading: boolean;
+}
 
 export default function Home() {
   const account = useCurrentAccount();
-  const [stats, setStats] = useState({
+  const [stats, setStats] = useState<DashboardStats>({
     activeSweepstakes: 0,
     hostedSweepstakes: 0,
     enteredSweepstakes: 0,

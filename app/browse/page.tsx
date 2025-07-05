@@ -2,19 +2,20 @@
 import { useState, useEffect } from "react";
 import { useCurrentAccount, useSignAndExecuteTransaction } from "@mysten/dapp-kit";
 import Link from "next/link";
-import {
-  getActiveSweepstakes,
-  enterSweepstakes,
-  hasEnteredSweepstakes
-} from "../../lib/smart-contract/index.js";
-import { SweepstakesCard } from "../../components/SweepstakesCard.jsx";
+import { 
+  getActiveSweepstakes, 
+  enterSweepstakes, 
+  hasEnteredSweepstakes,
+  Sweepstakes 
+} from "../../lib/smart-contract";
+import { SweepstakesCard } from "../../components/SweepstakesCard";
 
 export default function BrowsePage() {
   const account = useCurrentAccount();
   const { mutate: signAndExecute } = useSignAndExecuteTransaction();
-
-  const [activeSweepstakes, setActiveSweepstakes] = useState([]);
-  const [loading, setLoading] = useState(false);
+  
+  const [activeSweepstakes, setActiveSweepstakes] = useState<Sweepstakes[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     loadActiveSweepstakes();
