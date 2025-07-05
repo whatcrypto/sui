@@ -6,67 +6,39 @@ import {
   useCurrentAccount,
   useConnectWallet,
   useDisconnectWallet,
+  useWallets,
 } from "@mysten/dapp-kit";
 import { Menu, X, Wallet, ChevronDown } from "lucide-react";
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isConnecting, setIsConnecting] = useState(false);
-  const [isDisconnecting, setIsDisconnecting] = useState(false);
-
-  // Wallet hooks
   const account = useCurrentAccount();
-  const { mutate: connect } = useConnectWallet();
-  const { mutate: disconnect } = useDisconnectWallet();
   const wallets = useWallets();
+  const { mutate: connect, isPending: isConnecting } = useConnectWallet();
+  const { mutate: disconnect, isPending: isDisconnecting } =
+    useDisconnectWallet();
 
-  const handleConnect = async () => {
-    if (wallets.length === 0) {
-      alert(
-        "No wallets detected! Please install a Sui wallet extension first."
-      );
-      return;
-    }
-
-    setIsConnecting(true);
-    try {
+  const handleConnect = () => {
+    // Get the first available wallet from the wallets list
+    // This ensures we pass a proper WalletWithRequiredFeatures object
+    const firstWallet = wallets[0];
+    if (firstWallet) {
       connect(
-        { wallet: wallets[0] },
+        { wallet: firstWallet },
         {
           onSuccess: () => {
-            console.log("Wallet connected successfully!");
-            setIsConnecting(false);
+            console.log("Connected successfully");
           },
           onError: (error) => {
-            console.error("Failed to connect wallet:", error);
-            alert(`Failed to connect wallet: ${error.message}`);
-            setIsConnecting(false);
+            console.error("Connection failed:", error);
           },
         }
       );
-    } catch (error) {
-      console.error("Connection error:", error);
-      setIsConnecting(false);
     }
   };
 
-  const handleDisconnect = async () => {
-    setIsDisconnecting(true);
-    try {
-      disconnect(undefined, {
-        onSuccess: () => {
-          console.log("Wallet disconnected successfully!");
-          setIsDisconnecting(false);
-        },
-        onError: (error) => {
-          console.error("Failed to disconnect wallet:", error);
-          setIsDisconnecting(false);
-        },
-      });
-    } catch (error) {
-      console.error("Disconnect error:", error);
-      setIsDisconnecting(false);
-    }
+  const handleDisconnect = () => {
+    disconnect();
   };
 
   return (
@@ -93,10 +65,10 @@ export default function Navigation() {
                 Sweepstakes
               </Link>
               <Link
-                href="/discover"
+                href="/dashboard"
                 className="px-4 py-2 text-gray-300 hover:text-white transition-colors rounded-lg hover:bg-white/5"
               >
-                Discover
+                Dashboard
               </Link>
               <Link
                 href="/governance"
@@ -128,7 +100,7 @@ export default function Navigation() {
             ) : (
               <button
                 onClick={handleConnect}
-                disabled={isConnecting}
+                disabled={isConnecting || wallets.length === 0}
                 className="sui-button sui-button-primary text-sm"
               >
                 {isConnecting ? "Connecting..." : "Connect Wallet"}
@@ -157,11 +129,11 @@ export default function Navigation() {
                 Sweepstakes
               </Link>
               <Link
-                href="/discover"
+                href="/dashboard"
                 onClick={() => setIsOpen(false)}
                 className="text-gray-300 hover:text-white transition-colors px-4 py-3 hover:bg-white/5 rounded-lg"
               >
-                Discover
+                Dashboard
               </Link>
               <Link
                 href="/governance"
@@ -169,13 +141,6 @@ export default function Navigation() {
                 className="text-gray-300 hover:text-white transition-colors px-4 py-3 hover:bg-white/5 rounded-lg"
               >
                 Governance
-              </Link>
-              <Link
-                href="/staking"
-                onClick={() => setIsOpen(false)}
-                className="text-gray-300 hover:text-white transition-colors px-4 py-3 hover:bg-white/5 rounded-lg"
-              >
-                Staking
               </Link>
 
               {/* Mobile Wallet Section */}
@@ -200,7 +165,7 @@ export default function Navigation() {
                   <div className="px-4">
                     <button
                       onClick={handleConnect}
-                      disabled={isConnecting}
+                      disabled={isConnecting || wallets.length === 0}
                       className="sui-button sui-button-primary w-full text-sm"
                     >
                       {isConnecting ? "Connecting..." : "Connect Wallet"}

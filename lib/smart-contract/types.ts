@@ -377,3 +377,61 @@ export interface EntryNFTBatch {
   totalCount: number;
   distributionPlan?: DistributionMethod;
 }
+
+// Seamless Platform Types
+export interface SweepstakesEntry {
+  id: string; // Unique entry ID like "SWP-2024-001-7832"
+  sweepstakes_id: string;
+  participant_email: string;
+  participant_name?: string;
+  entry_nft_id?: string; // Minted NFT representing the entry
+  timestamp: number;
+  bonus_entries: number;
+  verification_hash: string; // For blockchain verification
+}
+
+export interface SweepstakesCampaign {
+  id: string;
+  title: string;
+  description: string;
+  prize_description: string;
+  prize_value: number;
+  host_address: string;
+  host_email: string;
+  start_time: number;
+  end_time: number;
+  max_entries?: number;
+  entry_fee_usd: number; // Host pays this fee
+  status: "draft" | "active" | "ended" | "winners_selected";
+  total_entries: number;
+  winners_count: number;
+  selected_winners?: string[]; // Entry IDs of winners
+  blockchain_proof?: string; // Transaction hash for verification
+}
+
+export interface PlatformConfig {
+  treasury_wallet: string;
+  gas_budget_per_entry: number;
+  platform_fee_percentage: number;
+  sweep_buyback_percentage: number;
+}
+
+// Gas Abstraction Types
+export interface GasTransaction {
+  id: string;
+  sweepstakes_id: string;
+  operation: "mint_entry" | "select_winner" | "distribute_prize";
+  gas_used: number;
+  gas_cost_sui: number;
+  timestamp: number;
+}
+
+// Public Verification Types
+export interface VerificationProof {
+  sweepstakes_id: string;
+  entry_nft_ids: string[];
+  random_seed: string;
+  winner_selection_tx: string;
+  block_height: number;
+  timestamp: number;
+}
