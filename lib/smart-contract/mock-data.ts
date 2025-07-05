@@ -65,7 +65,8 @@ class MockDataManager {
         id: "0xdemo2",
         host: "0xhost987654321fedcba",
         title: "$500 Amazon Gift Card",
-        description: "Enter to win a $500 Amazon gift card. No purchase necessary!",
+        description:
+          "Enter to win a $500 Amazon gift card. No purchase necessary!",
         prizeDescription: "Amazon Gift Card",
         prizeValueUsd: 500,
         prizeAmount: 500,
@@ -78,10 +79,10 @@ class MockDataManager {
         participants: [],
         enableSybilProtection: true,
         status: 0,
-        winner: null,
-        proofOfDelivery: null,
+        winner: undefined,
+        proofOfDelivery: undefined,
         deliveryInfo: "Digital delivery via email",
-        disputeId: null,
+        disputeId: undefined,
         createdAt: Date.now() - 172800000,
       },
       {
@@ -101,15 +102,15 @@ class MockDataManager {
         participants: [],
         enableSybilProtection: true,
         status: 0,
-        winner: null,
-        proofOfDelivery: null,
+        winner: undefined,
+        proofOfDelivery: undefined,
         deliveryInfo: "Shipped via UPS with insurance",
-        disputeId: null,
+        disputeId: undefined,
         createdAt: Date.now() - 259200000,
       },
     ];
 
-    demoSweepstakes.forEach(s => this.sweepstakes.set(s.id, s));
+    demoSweepstakes.forEach((s) => this.sweepstakes.set(s.id, s));
   }
 
   createSweepstakes(
@@ -140,10 +141,10 @@ class MockDataManager {
       participants: [],
       enableSybilProtection,
       status: 0, // Active
-      winner: null,
-      proofOfDelivery: null,
+      winner: undefined,
+      proofOfDelivery: undefined,
       deliveryInfo: "",
-      disputeId: null,
+      disputeId: undefined,
       createdAt: Date.now(),
     };
 
@@ -162,17 +163,18 @@ class MockDataManager {
     if (!sweepstake) return false;
 
     // Check if already entered
-    if (sweepstake.participants.includes(userAddress)) return false;
+    if (sweepstake.participants!.includes(userAddress)) return false;
 
     // Check if full
-    if (sweepstake.currentParticipants >= sweepstake.maxParticipants) return false;
+    if (sweepstake.currentParticipants! >= sweepstake.maxParticipants)
+      return false;
 
     // Check if ended
-    if (Date.now() > sweepstake.endTime) return false;
+    if (Date.now() > sweepstake.endTime!) return false;
 
     // Add participant
-    sweepstake.participants.push(userAddress);
-    sweepstake.currentParticipants++;
+    sweepstake.participants!.push(userAddress);
+    sweepstake.currentParticipants!++;
 
     // Track user entries
     const entries = this.userEntries.get(userAddress) || [];
@@ -184,7 +186,7 @@ class MockDataManager {
 
   getActiveSweepstakes(): MockSweepstakes[] {
     return Array.from(this.sweepstakes.values()).filter(
-      s => s.status === 0 && Date.now() < s.endTime
+      (s) => s.status === 0 && Date.now() < s.endTime!
     );
   }
 
@@ -202,16 +204,18 @@ class MockDataManager {
 
   hasEnteredSweepstakes(sweepstakesId: string, userAddress: string): boolean {
     const sweepstake = this.sweepstakes.get(sweepstakesId);
-    return sweepstake ? sweepstake.participants.includes(userAddress) : false;
+    return sweepstake ? sweepstake.participants!.includes(userAddress) : false;
   }
 
   selectWinner(sweepstakesId: string): string | null {
     const sweepstake = this.sweepstakes.get(sweepstakesId);
-    if (!sweepstake || sweepstake.participants.length === 0) return null;
+    if (!sweepstake || sweepstake.participants!.length === 0) return null;
 
     // Simple random selection for demo
-    const winnerIndex = Math.floor(Math.random() * sweepstake.participants.length);
-    sweepstake.winner = sweepstake.participants[winnerIndex];
+    const winnerIndex = Math.floor(
+      Math.random() * sweepstake.participants!.length
+    );
+    sweepstake.winner = sweepstake.participants![winnerIndex];
     sweepstake.status = 1; // Winner selected
 
     return sweepstake.winner;
