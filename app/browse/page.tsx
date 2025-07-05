@@ -2,17 +2,17 @@
 import { useState, useEffect } from "react";
 import { useCurrentAccount, useSignAndExecuteTransaction } from "@mysten/dapp-kit";
 import Link from "next/link";
-import { 
-  getActiveSweepstakes, 
-  enterSweepstakes, 
-  hasEnteredSweepstakes 
+import {
+  getActiveSweepstakes,
+  enterSweepstakes,
+  hasEnteredSweepstakes
 } from "../../lib/smart-contract/index.js";
 import { SweepstakesCard } from "../../components/SweepstakesCard.jsx";
 
 export default function BrowsePage() {
   const account = useCurrentAccount();
   const { mutate: signAndExecute } = useSignAndExecuteTransaction();
-  
+
   const [activeSweepstakes, setActiveSweepstakes] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -46,7 +46,7 @@ export default function BrowsePage() {
       }
 
       const transaction = await enterSweepstakes(sweepstakesId);
-      
+
       signAndExecute(
         { transaction },
         {
@@ -76,7 +76,7 @@ export default function BrowsePage() {
             </div>
             <h1 className="text-white text-2xl font-bold mb-4">Browse Sweepstakes</h1>
             <p className="text-slate-400 mb-6">Connect your wallet to view and enter active sweepstakes</p>
-            <Link 
+            <Link
               href="/"
               className="inline-block bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200"
             >
@@ -98,7 +98,7 @@ export default function BrowsePage() {
               <h1 className="text-3xl font-bold text-white mb-2">Browse Sweepstakes</h1>
               <p className="text-slate-400">Discover and enter active sweepstakes</p>
             </div>
-            <Link 
+            <Link
               href="/"
               className="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg transition-colors"
             >
@@ -110,28 +110,28 @@ export default function BrowsePage() {
         {/* Navigation */}
         <div className="bg-slate-900/50 border border-slate-700/50 backdrop-blur-sm rounded-lg p-1 mb-6">
           <div className="flex space-x-1">
-            <Link 
+            <Link
               href="/browse"
               className="flex-1 flex items-center justify-center space-x-2 px-4 py-2 rounded-md text-sm font-medium bg-gradient-to-r from-cyan-600 to-blue-600 text-white"
             >
               <span>🔍</span>
               <span>Browse</span>
             </Link>
-            <Link 
+            <Link
               href="/create"
               className="flex-1 flex items-center justify-center space-x-2 px-4 py-2 rounded-md text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all duration-200"
             >
               <span>➕</span>
               <span>Create</span>
             </Link>
-            <Link 
+            <Link
               href="/hosted"
               className="flex-1 flex items-center justify-center space-x-2 px-4 py-2 rounded-md text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all duration-200"
             >
               <span>🏆</span>
               <span>My Hosted</span>
             </Link>
-            <Link 
+            <Link
               href="/entries"
               className="flex-1 flex items-center justify-center space-x-2 px-4 py-2 rounded-md text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all duration-200"
             >
@@ -164,7 +164,7 @@ export default function BrowsePage() {
               <div className="text-6xl mb-4">🎲</div>
               <h3 className="text-white text-xl font-semibold mb-2">No Active Sweepstakes</h3>
               <p className="text-slate-400 mb-6">Be the first to create a sweepstakes!</p>
-              <Link 
+              <Link
                 href="/create"
                 className="inline-block bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200"
               >
