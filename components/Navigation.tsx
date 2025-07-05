@@ -6,7 +6,6 @@ import {
   useCurrentAccount,
   useConnectWallet,
   useDisconnectWallet,
-  useWallets,
 } from "@mysten/dapp-kit";
 import { Menu, X, Wallet, ChevronDown } from "lucide-react";
 
@@ -104,12 +103,6 @@ export default function Navigation() {
                 className="px-4 py-2 text-gray-300 hover:text-white transition-colors rounded-lg hover:bg-white/5"
               >
                 Governance
-              </Link>
-              <Link
-                href="/staking"
-                className="px-4 py-2 text-gray-300 hover:text-white transition-colors rounded-lg hover:bg-white/5"
-              >
-                Staking
               </Link>
             </div>
           </div>
